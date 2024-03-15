@@ -1,7 +1,8 @@
 import inject
 from expects import be_false, be_true, expect
-from mamba import after, before, description, it
+from mamba import after, before, description, it, context
 
+from src.adapter.constants.constants import NAME_MAX_LENGTH, NAME_MIN_LENGTH, ADDRESS_MAX_LENGTH, ADDRESS_MIN_LENGTH
 from src.adapter.forms.forms import OrderForm
 from tests.conftest import DummyOrderData, create_app
 
@@ -9,55 +10,74 @@ app = create_app()
 app.app_context().push()
 
 with description("Testing form validation") as self:
-    with before.each:
-        self.order_id = 1
-        self.order_name = "Test Order"
-        self.order_address = "Test Address"
+    with context('Launch OrderForm tests'):
+        with before.each:
+            self.order_id = 1
+            self.order_name = "Test Order"
+            self.order_address = "Test Address"
 
-    with after.each:
-        inject.clear()
+        with after.each:
+            inject.clear()
 
-    with it("the successful validation of the normal order"):
-        data = DummyOrderData({"name": "example_name", "address": "example_address"})
-        form = OrderForm(data)
-        expect(form.validate()).to(be_true)
 
-    with it("Validate invalid order with the small name"):
-        data = DummyOrderData({"name": "ex", "address": "example_address"})
-        form = OrderForm(data)
-        expect(form.validate()).to(be_false)
+        def get_dummy_order_form_data(self, order_data: dict) -> OrderForm:
+            return OrderForm(DummyOrderData(order_data))
 
-    with it("Validate invalid order with the small address"):
-        data = DummyOrderData({"name": "example_name", "address": "ex"})
-        form = OrderForm(data)
-        expect(form.validate()).to(be_false)
 
-    with it("Validate invalid order with the big name"):
-        data = DummyOrderData({"name": "".join(["example_name"] * 30), "address": "example_address"})
-        form = OrderForm(data)
-        expect(form.validate()).to(be_false)
+        def _get_non_negative_length_plus_step(self, length, step=-1):
+            _len = length + step
+            if _len < 0:
+                return 0
+            return _len
 
-    with it("Validate invalid order with the big address"):
-        data = DummyOrderData({"name": "example_name", "address": "".join(["example_address"] * 30)})
-        form = OrderForm(data)
-        expect(form.validate()).to(be_false)
 
-    with it("Validate invalid order"):
-        data = DummyOrderData({"name": "ex", "address": "ex"})
-        form = OrderForm(data)
-        expect(form.validate()).to(be_false)
+        with it("the successful validation of the normal order"):
+            form = self.get_dummy_order_form_data({"name": "example_name", "address": "example_address"})
+            expect(form.validate()).to(be_true)
 
-    with it("Validate empty order"):
-        data = DummyOrderData({"name": "", "address": ""})
-        form = OrderForm(data)
-        expect(form.validate()).to(be_false)
+        with it("Validate invalid order with the small name"):
+            form = self.get_dummy_order_form_data({
+                "name": "".join(["a"] * self._get_non_negative_length_plus_step(NAME_MIN_LENGTH)),
+                "address": "example_address",
+            })
+            expect(form.validate()).to(be_false)
 
-    with it("Validate invalid order without name"):
-        data = DummyOrderData({"name": "", "address": "example_address"})
-        form = OrderForm(data)
-        expect(form.validate()).to(be_false)
+        with it("Validate invalid order with the small address"):
+            form = self.get_dummy_order_form_data({
+                "name": "example_name",
+                "address": "".join(["a"] * self._get_non_negative_length_plus_step(ADDRESS_MIN_LENGTH)),
+            })
+            expect(form.validate()).to(be_false)
 
-    with it("Validate invalid order without address"):
-        data = DummyOrderData({"name": "example_name", "address": ""})
-        form = OrderForm(data)
-        expect(form.validate()).to(be_false)
+        with it("Validate invalid order with the big name"):
+            form = self.get_dummy_order_form_data({
+                "name": "".join(["a"] * self._get_non_negative_length_plus_step(NAME_MAX_LENGTH, 1)),
+                "address": "example_address"
+            })
+            expect(form.validate()).to(be_false)
+
+        with it("Validate invalid order with the big address"):
+            form = self.get_dummy_order_form_data({
+                "name": "example_name",
+                "address": "".join(["a"] * self._get_non_negative_length_plus_step(ADDRESS_MAX_LENGTH, 1)),
+            })
+            expect(form.validate()).to(be_false)
+
+        with it("Validate invalid order"):
+            form = self.get_dummy_order_form_data({
+                "name": "".join(["a"] * self._get_non_negative_length_plus_step(NAME_MIN_LENGTH)),
+                "address": "".join(["a"] * self._get_non_negative_length_plus_step(ADDRESS_MIN_LENGTH)),
+            })
+            expect(form.validate()).to(be_false)
+
+        with it("Validate empty order"):
+            form = self.get_dummy_order_form_data({"name": "", "address": ""})
+            expect(form.validate()).to(be_false)
+
+        with it("Validate invalid order without name"):
+            form = self.get_dummy_order_form_data({"name": "", "address": "example_address"})
+            expect(form.validate()).to(be_false)
+
+        with it("Validate invalid order without address"):
+            form = self.get_dummy_order_form_data({"name": "example_name", "address": ""})
+            expect(form.validate()).to(be_false)
