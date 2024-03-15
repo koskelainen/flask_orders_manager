@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="text-gray-600 body-font overflow-hidden">
+    <div class="container px-5 py-24 mx-auto">
+        <div class="lg:w-4/5 mx-auto flex flex-wrap">
+            <div class="lg:w-1/2 w-full lg:pr-10 lg:py-6 mb-6 lg:mb-0">
+                <h2 class="text-sm title-font text-gray-500 tracking-widest">Order</h2>
+                <h1 class="text-gray-900 text-3xl title-font font-medium mb-4"> ID:{{ order.id }} </h1>
+                <div class="flex mb-4">
+                    <a href="{{ url_for('orders.order_detail' ,order_id=order.id) }}"
+                       class="flex-grow border-b-2 border-gray-300 py-2 text-lg px-1">
+                        Description</a>
+                    <a href="{{ url_for('orders.order_update' ,order_id=order.id) }}"
+                       class="flex-grow border-b-2 border-gray-300 py-2 text-lg px-1">
+                        Update</a>
+                    <a class="flex-grow text-indigo-500 border-b-2 border-indigo-500 py-2 text-lg px-1">
+                        Delete</a>
+                </div>
+                <p class="leading-relaxed mb-4">The order for name "{{ order.name }}".</p>
+                <div class="flex border-t border-gray-200 py-2">
+                    <span class="text-gray-500">Address</span>
+                    <span class="ml-auto text-gray-900">{{ order.address }}</span>
+                </div>
+                <div class="flex border-t border-gray-200 py-2">
+                    <span class="text-gray-500">Create at</span>
+                    <span class="ml-auto text-gray-900">{{ order.created_at }}</span>
+                </div>
+                <div class="flex border-t border-gray-200 py-2">
+                    <span class="text-gray-500">Updated at</span>
+                    <span class="ml-auto text-gray-900">{{ order.updated_at }}</span>
+                </div>
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    {{ form.csrf_token }}
+                        <button class="lg:w-1/2 flex ml-auto text-white bg-red-300 border-0 py-2 px-6 focus:outline-none hover:bg-red-500 rounded"
+                                type="submit">
+                            Submit
+                        </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock content %}
