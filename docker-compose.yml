@@ -4,14 +4,14 @@ x-template: &service-template
   env_file:
     - .env
   networks:
-    - flask_orders_manager_lab
+    - flask_lab
 
 networks:
-  flask_orders_manager_lab:
+  flask_lab:
     driver: bridge
 
 volumes:
-  appgrowth_postgres_data:
+  postgres_data:
 
 
 services:
@@ -56,7 +56,7 @@ services:
     environment:
       - POSTGRES_MULTIPLE_DATABASES=${POSTGRES_DB}, ${POSTGRES_DB_TEST}
     volumes:
-      - appgrowth_postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
       - ./docker/postgres:/docker-entrypoint-initdb.d/
     ports:
       - "${DB_PORT}:${POSTGRES_PORT}"
