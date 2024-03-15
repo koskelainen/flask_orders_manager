@@ -21,6 +21,5 @@ class BaseOrderForm(FlaskForm):
         ])
 
 
-# TODO combine it
 class OrderForm(BaseOrderForm):
     submit = SubmitField("Submit order")
