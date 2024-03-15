@@ -6,17 +6,19 @@ from src.adapter.constants.constants import NAME_MAX_LENGTH, NAME_MIN_LENGTH, AD
 from src.adapter.forms.forms import OrderForm
 from tests.conftest import DummyOrderData, create_app
 
-app = create_app()
-app.app_context().push()
-
 with description("Testing form validation") as self:
     with context('Launch OrderForm tests'):
+        with before.all:
+            self.app = create_app()
+            self.app.app_context().push()
+            self.server_name = self.app.config.get("SERVER_NAME")
+
         with before.each:
             self.order_id = 1
             self.order_name = "Test Order"
             self.order_address = "Test Address"
 
-        with after.each:
+        with after.all:
             inject.clear()
 
 
