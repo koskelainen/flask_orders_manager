@@ -5,6 +5,10 @@ from mamba import it
 
 from src.adapter.forms.forms import OrderForm
 from tests.conftest import DummyOrderData
+from tests.conftest import create_app
+
+app = create_app()
+app.app_context().push()
 
 with description('Testing form validation') as self:
     with before.each:
