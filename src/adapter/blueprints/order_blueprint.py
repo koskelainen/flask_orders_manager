@@ -1,11 +1,12 @@
 import inject
 from flask import Blueprint, Response, abort, redirect, render_template, request, session, url_for
+from werkzeug.exceptions import HTTPException
 
 from src.adapter.database.order_orm import OrderModel
 from src.adapter.forms.forms import OrderForm
 from src.application.order import Order
 from src.application.search_orders import SearchOrders
-from werkzeug.exceptions import HTTPException
+
 
 @inject.autoparams()
 def create_order_blueprint(

@@ -3,8 +3,8 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 from inject import clear as inject_clear
-from sqlalchemy import create_engine, Engine
-from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy import Engine, create_engine
+from sqlalchemy.orm import Session, sessionmaker
 
 from src import create_application
 from src.adapter.models.models import OrderModel

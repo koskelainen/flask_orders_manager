@@ -2,8 +2,7 @@ import inject
 from flask_testing import TestCase
 
 from src.adapter.forms.forms import OrderForm
-from src.adapter.models.models import OrderModel
-from tests.conftest import DummyOrderData, clean, create_app, engine, session, set_up
+from tests.conftest import DummyOrderData, create_app
 
 
 class OrderFormTest(TestCase):
