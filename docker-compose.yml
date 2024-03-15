@@ -1,0 +1,71 @@
+version: '3.8'
+
+x-template: &service-template
+  env_file:
+    - .env
+  networks:
+    - flask_orders_manager_lab
+
+networks:
+  flask_orders_manager_lab:
+    driver: bridge
+
+volumes:
+  appgrowth_postgres_data:
+
+
+services:
+  api:
+    <<: *service-template
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: prod
+    restart: always
+    command: |
+      bash -c 'while !</dev/tcp/${POSTGRES_HOST}/${POSTGRES_PORT}; do sleep 1; done; source /opt/poetry/bin/activate && gunicorn -w 4 -b ${GUNICORN_HOST}:${GUNICORN_PORT} --reload "wsgi:app"'
+    ports:
+      - "${API_PORT}:${GUNICORN_PORT}"
+    volumes:
+      - ./src:/app/src
+      - ./wsgi.py:/app/wsgi.py
+    depends_on:
+      - postgres
+      - initdb
+
+  initdb:
+    <<: *service-template
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: initdb
+    restart: no
+    command: |
+      bash -c 'while !</dev/tcp/${POSTGRES_HOST}/${POSTGRES_PORT}; do sleep 1; done; source /opt/poetry/bin/activate && alembic upgrade head'
+    volumes:
+      - ./src:/app/src
+      - ./migrations:/app/migrations
+      - ./alembic.ini:/app/alembic.ini
+    depends_on:
+      - postgres
+
+  postgres:
+    <<: *service-template
+    image: postgres:15.1-alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_MULTIPLE_DATABASES=${POSTGRES_DB}, ${POSTGRES_DB_TEST}
+    volumes:
+      - appgrowth_postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres:/docker-entrypoint-initdb.d/
+    ports:
+      - "${DB_PORT}:${POSTGRES_PORT}"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    logging:
+      options:
+        max-size: 10m
+        max-file: "3"
