@@ -1,7 +1,7 @@
 import inject
 from flask_testing import TestCase
 
-from src.adapter.constants.constants import NAME_MAX_LENGTH, NAME_MIN_LENGTH, ADDRESS_MAX_LENGTH, ADDRESS_MIN_LENGTH
+from src.adapter.constants.constants import ADDRESS_MAX_LENGTH, ADDRESS_MIN_LENGTH, NAME_MAX_LENGTH, NAME_MIN_LENGTH
 from src.adapter.forms.forms import OrderForm
 from tests.conftest import DummyOrderData, create_app
 
