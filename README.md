@@ -45,7 +45,22 @@ For running unittests with Docker postgresql, use the variable `DATABASE_URI_TES
 poetry run python -m unittest discover -s tests/test_unittest
 ```
 
-### Coverage Reports
+### Mamba coverage reports
+
+For console report, run:
+
+```shell
+
+poetry run mamba tests/test_mamba/*.py --enable-coverage && poetry run coverage report -m  --rcfile=pyproject.toml
+```
+
+To generate an html report, run:
+
+```shell
+poetry run mamba tests/test_mamba/*.py --enable-coverage && poetry run coverage html -d coverage  --rcfile=pyproject.toml
+```
+
+### Unittest coverage reports
 
 For console report, run:
 
