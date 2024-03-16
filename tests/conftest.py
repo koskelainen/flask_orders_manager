@@ -37,6 +37,8 @@ def create_app():
     application.config["WTF_CSRF_ENABLED"] = False
     application.config["SERVER_NAME"] = application.config.get("SERVER_NAME") or "localhost"
 
+    application.app_context().push()
+
     return application
 
 
