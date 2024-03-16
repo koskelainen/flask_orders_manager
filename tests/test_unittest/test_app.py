@@ -32,7 +32,10 @@ class MainTest(TestCase):
         clean(test_engine=engine, test_session=session)
 
     def rebuild_response_location(self, response):
-        response.location = urljoin(f"http://{self.server_name}", response.location)
+        _location = f"http://{self.server_name}"
+        if response.location:
+            _location = urljoin(f"http://{self.server_name}", response.location)
+        response.location = _location
         return response
 
     def test_app_exists(self):
