@@ -1,13 +1,13 @@
 import inject
 from expects import be_false, be_true, expect
-from mamba import after, before, description, it, context
+from mamba import after, before, context, description, it
 
-from src.adapter.constants.constants import NAME_MAX_LENGTH, NAME_MIN_LENGTH, ADDRESS_MAX_LENGTH, ADDRESS_MIN_LENGTH
+from src.adapter.constants.constants import ADDRESS_MAX_LENGTH, ADDRESS_MIN_LENGTH, NAME_MAX_LENGTH, NAME_MIN_LENGTH
 from src.adapter.forms.forms import OrderForm
 from tests.conftest import DummyOrderData, create_app
 
 with description("Testing form validation") as self:
-    with context('Launch OrderForm tests'):
+    with context("Launch OrderForm tests"):
         with before.all:
             self.app = create_app()
             self.app.app_context().push()
@@ -54,7 +54,7 @@ with description("Testing form validation") as self:
         with it("Validate invalid order with the big name"):
             form = self.get_dummy_order_form_data({
                 "name": "".join(["a"] * self._get_non_negative_length_plus_step(NAME_MAX_LENGTH, 1)),
-                "address": "example_address"
+                "address": "example_address",
             })
             expect(form.validate()).to(be_false)
 
