@@ -15,7 +15,7 @@ volumes:
 
 
 services:
-  api:
+  web:
     <<: *service-template
     build:
       context: .
