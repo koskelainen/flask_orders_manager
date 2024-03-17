@@ -30,8 +30,7 @@ with description("Mocking ORM testing") as self:
 
 
     def injector(self, database: Mock) -> None:
-        inject.clear_and_configure(lambda binder: binder
-                                   .bind(OrdersBasicORM, database))
+        inject.clear_and_configure(lambda binder: binder.bind(OrdersBasicORM, database))
 
 
     with it("create new order"):
