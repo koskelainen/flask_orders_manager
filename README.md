@@ -6,6 +6,34 @@ docker compose up -d
 
 To access the application server, go to http://localhost:8180/
 
+
+## Using Makefile
+
+To carry out operations, use the Makefile.
+
+```
+$ make help 
+Please specify a build target. The choices are:
+build                          Build all or c=<name> container
+rebuild                        Stop containers (via 'down'), rebuilds services images (via 'build') and start services (via 'start')
+up                             Start all or c=<name> containers in foreground
+start                          Start all or c=<name> containers in background
+stop                           Stop all or c=<name> containers
+restart                        Restart all or c=<name> containers
+logs                           Show logs for all or c=<name> containers
+status                         Show status of containers
+ps                             Alias of status
+down                           Clean all data
+clean                          Clean all data
+install                        Install the poetry environment
+check                          Run code quality tools.
+flask                          Activate python and launch flask
+ruffix                         Running ruff check --fix
+test                           Test the code with mamba.
+cov                            Coverage console mamba's tests
+help                           Show help
+```
+
 ## Running locally for development
 
 ### Setting up Poetry environment
@@ -39,12 +67,6 @@ To run Mamba tests with mock and expects, use:
 poetry run mamba tests/test_mamba/**/*.py
 ```
 
-For running unittests with Docker postgresql, use the variable `DATABASE_URI_TEST` in the [.env.local](.env.local) and run:
-
-```shell
-poetry run python -m unittest discover -s tests/test_unittest
-```
-
 ### Mamba coverage reports
 
 For console report, run:
@@ -60,6 +82,18 @@ To generate an html report, run:
 poetry run mamba tests/test_mamba/**/*.py --enable-coverage && poetry run coverage html -d coverage  --rcfile=pyproject.toml
 ```
 
+<details>
+<summary>
+Unittest
+</summary>
+
+
+For running unittests with Docker postgresql, use the variable `DATABASE_URI_TEST` in the [.env.local](.env.local) and run:
+
+```shell
+poetry run python -m unittest discover -s tests/test_unittest
+```
+
 ### Unittest coverage reports
 
 For console report, run:
@@ -73,3 +107,6 @@ To generate an html report, run:
 ```shell
 poetry run coverage run  --rcfile=pyproject.toml && poetry run coverage html -d coverage  --rcfile=pyproject.toml
 ```
+
+
+</details>
