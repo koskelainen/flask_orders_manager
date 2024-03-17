@@ -1,11 +1,11 @@
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 from urllib.parse import urljoin
 
 import inject
 from expects import be_none, be_true, contain, equal, expect, have_key
 from flask import url_for
 from jinja2 import TemplateNotFound
-from mamba import after, before, context, description, it
+from mamba import after, before, context, description, it, _it
 
 from tests.conftest import create_app
 
@@ -66,7 +66,7 @@ with description("Test the Flask app by") as self:
                 expect(self.valid_status_codes).to(contain(response.status_code))
                 expect(response.location).to(equal(expected_location))
 
-            with it("POST request with valid data to the 'success' page."):
+            with _it("POST request with valid data to the 'success' page."):
                 form = {
                     "name": "fake",
                     "address": "fake-address",
@@ -78,7 +78,7 @@ with description("Test the Flask app by") as self:
                 expect(self.valid_status_codes).to(contain(response.status_code))
                 expect(response.location).to(equal(expected_location))
 
-        with it("GET request to the order by id which does not exist."):
+        with _it("GET request to the order by id which does not exist."):
             order_id = 1234567
             response = self.client.get(f"/orders/{order_id}/detail")
             data = response.data.decode("utf-8")
@@ -109,7 +109,7 @@ with description("Test the Flask app by") as self:
             self.client.get(url_for("orders.order_delete", order_id=1))
             self.assert_template_used("order_delete.html")
 
-        with it("GET request to the order list."):
+        with _it("GET request to the order list."):
             expected_location = urljoin(f"http://{self.server_name}", None)
             valid_status_codes = [200]
             response = self.client.get(url_for("orders.order_list"))
