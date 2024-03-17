@@ -36,7 +36,7 @@ flask run -h localhost -p 8000
 To run Mamba tests with mock and expects, use:
 
 ```shell
-poetry run mamba tests/test_mamba/*.py
+poetry run mamba tests/test_mamba/**/*.py
 ```
 
 For running unittests with Docker postgresql, use the variable `DATABASE_URI_TEST` in the [.env.local](.env.local) and run:
