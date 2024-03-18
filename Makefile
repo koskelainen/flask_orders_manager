@@ -49,9 +49,10 @@ down: confirm ## Clean all data
 
 .PHONY: clean
 clean: confirm down ## Clean all data
-	@find . -type d -name "coverage" -exec rm -if {} \;
-	@find . -type f -name ".coverage" -exec rm -if {} \;
-	@find . -type d -name "__pycache__" -exec rm -if {} \;
+	@rm -rf coverage
+	@rm -f .coverage
+	@find ./src -type d -name "__pycache__" | xargs rm -rf {};
+	@find ./tests -type d -name "__pycache__" | xargs rm -rf {};
 
 .PHONY: confirm
 confirm:
