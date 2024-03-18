@@ -53,6 +53,7 @@ clean: confirm down ## Clean all data
 	@rm -f .coverage
 	@find ./src -type d -name "__pycache__" | xargs rm -rf {};
 	@find ./tests -type d -name "__pycache__" | xargs rm -rf {};
+	@rm -rf ${VENV_PATH}
 
 .PHONY: confirm
 confirm:
