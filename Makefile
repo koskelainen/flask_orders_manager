@@ -54,6 +54,7 @@ clean: confirm down ## Clean all data
 	@find ./src -type d -name "__pycache__" | xargs rm -rf {};
 	@find ./tests -type d -name "__pycache__" | xargs rm -rf {};
 	@rm -rf ${VENV_PATH}
+	@echo "👻 Remember to deactivate the poetry environment by running the command: 'deactivate'."
 
 .PHONY: confirm
 confirm:
