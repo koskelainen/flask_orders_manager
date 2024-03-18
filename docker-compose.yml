@@ -51,10 +51,11 @@ services:
 
   postgres:
     <<: *service-template
-    image: postgres:15.1-alpine
+    image: postgres:16
     restart: unless-stopped
     environment:
       - POSTGRES_MULTIPLE_DATABASES=${POSTGRES_DB}, ${POSTGRES_DB_TEST}
+    command: postgres -c shared_preload_libraries=pg_stat_statements -c pg_stat_statements.track=all -c max_connections=20
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./docker/postgres:/docker-entrypoint-initdb.d/
