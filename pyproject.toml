@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "appgrowth-tt"
+name = "orders_manager"
 version = "0.1.0"
 description = ""
 authors = ["Evgenii Koskelainen <koskelainen8@gmail.com>"]
