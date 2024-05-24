@@ -43,9 +43,19 @@ status: ## Show status of containers
 .PHONY: ps
 ps: status ## Alias of status
 
+.PHONY: shell
+shell: ## Exec shell session to c=<name> container
+	@$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) exec $(c) sh
+
 .PHONY: down
 down: confirm ## Clean all data
 	@$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) down
+
+.PHONY: confirm
+confirm:
+	@echo "🚀 Clean temp data in project"
+	@echo "🚀 Stop and remove containers, networks in project"
+	@( read -p "$(RED)Are you sure? [y/N]$(RESET): " sure && case "$$sure" in [yY]) true;; *) false;; esac )
 
 .PHONY: clean
 clean: confirm down ## Clean all data
@@ -55,11 +65,6 @@ clean: confirm down ## Clean all data
 	@find ./tests -type d -name "__pycache__" | xargs rm -rf {};
 	@rm -rf ${VENV_PATH}
 	@echo "👻 Remember to deactivate the poetry environment by running the command: 'deactivate'."
-
-.PHONY: confirm
-confirm:
-	@echo "🚀 Clean temp data in project"
-	@( read -p "$(RED)Are you sure? [y/N]$(RESET): " sure && case "$$sure" in [yY]) true;; *) false;; esac )
 
 .PHONY: install
 install: ## Install the poetry environment
